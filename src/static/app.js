@@ -472,6 +472,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Function to generate share URLs for social media
+  function generateShareUrls(activityName, activityDescription, schedule) {
+    const pageUrl = encodeURIComponent(window.location.href);
+    const shareText = encodeURIComponent(`Check out ${activityName} at Mergington High School! ${activityDescription} Schedule: ${schedule}`);
+    const shareTitle = encodeURIComponent(`${activityName} - Mergington High School`);
+    
+    return {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`,
+      twitter: `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`,
+      email: `mailto:?subject=${shareTitle}&body=${shareText}%0A%0A${pageUrl}`
+    };
+  }
+
   // Function to render a single activity card
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
@@ -519,6 +532,25 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Create share buttons
+    const shareUrls = generateShareUrls(name, details.description, formattedSchedule);
+    const shareButtons = `
+      <div class="share-container">
+        <span class="share-label">Share:</span>
+        <div class="share-buttons">
+          <a href="${shareUrls.facebook}" target="_blank" rel="noopener noreferrer" class="share-button facebook-share" title="Share on Facebook">
+            <span class="share-icon">📘</span>
+          </a>
+          <a href="${shareUrls.twitter}" target="_blank" rel="noopener noreferrer" class="share-button twitter-share" title="Share on Twitter">
+            <span class="share-icon">🐦</span>
+          </a>
+          <a href="${shareUrls.email}" class="share-button email-share" title="Share via Email">
+            <span class="share-icon">✉️</span>
+          </a>
+        </div>
+      </div>
+    `;
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -528,6 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
       ${capacityIndicator}
+      ${shareButtons}
       <div class="participants-list">
         <h5>Current Participants:</h5>
         <ul>
